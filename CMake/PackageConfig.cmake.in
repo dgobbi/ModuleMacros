@@ -1,0 +1,52 @@
+#-----------------------------------------------------------------------------
+#
+# @_package@Config.cmake - cmake configuration file for packages.
+#
+#-----------------------------------------------------------------------------
+
+# The C and C++ flags added to the cmake-configured flags.
+set(@_prefix@_REQUIRED_C_FLAGS "@_required_c_flags@")
+set(@_prefix@_REQUIRED_CXX_FLAGS "@_required_cxx_flags@")
+
+# The package name, for use with find_package()
+set(@_prefix@_PACKAGE_NAME "@_package@")
+
+# The version number
+set(@_prefix@_MAJOR_VERSION "@PROJECT_MAJOR_VERSION@")
+set(@_prefix@_MINOR_VERSION "@PROJECT_MINOR_VERSION@")
+set(@_prefix@_BUILD_VERSION "@PROJECT_BUILD_VERSION@")
+
+# Configured settings@_config@
+set(@_prefix@_BUILD_SHARED_LIBS "@BUILD_SHARED_LIBS@")
+
+# Set the CMake directory for the macros
+set(@_prefix@_CMAKE_DIR "@_cmake_dir@")@_core_dir@
+
+# Set the directory for the modules
+set(@_prefix@_MODULES_DIR "@_modules_dir@")
+
+# The location of the "use" file.
+set(@_prefix@_USE_FILE "${CMAKE_CURRENT_LIST_DIR}/Use@_package@.cmake")
+
+# Our library dependencies (contains definitions for IMPORTED targets)
+if(NOT TARGET @_first_target@)
+  include("${CMAKE_CURRENT_LIST_DIR}/@_package@Targets.cmake")
+  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${@_prefix@_MODULES_DIR})
+endif()
+
+# Get the requested modules
+set(@_prefix@_MODULES_ENABLED@_modules_enabled@)
+if(@_package@_FIND_COMPONENTS)
+  set(@_prefix@_MODULES_REQUESTED ${@_package@_FIND_COMPONENTS})
+else()
+  set(@_prefix@_MODULES_REQUESTED ${@_prefix@_MODULES_ENABLED})
+endif()
+
+include("${CORE_CMAKE_DIR}/ModuleMacros.cmake")
+# Load requested modules and set the following variables:
+#  @_prefix@_DEFINITIONS   preprocessor definitions for compilation
+#  @_prefix@_LIBRARIES     libraries for all requested modules
+#  @_prefix@_INCLUDE_DIRS  include directories for all requested modules
+#  @_prefix@_LIBRARY_DIRS  external library paths for all requested modules
+#  @_prefix@_RUNTIME_LIBRARY_DIRS  runtime library paths, for DLLs
+package_config(@_prefix@ ${@_prefix@_MODULES_REQUESTED})

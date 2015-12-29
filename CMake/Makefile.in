@@ -1,0 +1,29 @@
+##############################################################
+#               CMake Project Wrapper Makefile               #
+##############################################################
+#
+#  This makefile uses Build/Makefile to do the actual build,
+#  where Build/Makefile is a cmake-generated makefile.  The
+#  only target that is not forwarded is "distclean", which
+#  removes the build directory and all build files.
+##############################################################
+
+SHELL := /bin/bash
+RM    := rm -rf
+
+all: ./Build/Makefile
+	@ $(MAKE) -C Build
+
+distclean:
+	@- $(RM) ./Build
+	@- ${RM} ./Makefile
+	@- ${RM} ./bin
+	@- ${RM} ./lib
+	@- ${RM} ./include
+	@- ${RM} ./share
+	@- ${RM} ./*.cmake
+
+ifeq ($(findstring distclean,$(MAKECMDGOALS)),)
+    $(MAKECMDGOALS): ./Build/Makefile
+	@ $(MAKE) -C Build $(MAKECMDGOALS)
+endif

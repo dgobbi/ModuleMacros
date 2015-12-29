@@ -1,0 +1,8 @@
+set(@_module@_LOADED 1)
+set(@_module@_DEPENDS "@_module_depends@")
+set(@_module@_LIBRARIES "@_module_libraries@")
+set(@_module@_INCLUDE_DIRS "@_module_include_dirs@")
+set(@_module@_LIBRARY_DIRS "@_module_library_dirs@")
+set(@_module@_RUNTIME_LIBRARY_DIRS "@_module_library_dirs@")
+set(@_module@_WRAP_HIERARCHY_FILE "@_module_hierarchy_file@")
+@_module_export_code@

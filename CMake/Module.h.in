@@ -1,0 +1,38 @@
+/*=========================================================================
+
+  Package: @_package@
+
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE.  See the copyright notice for more information.
+
+=========================================================================*/
+
+/* Export macros for shared libraries */
+
+#ifndef __@_libname@Module_h
+#define __@_libname@Module_h
+
+/* Configuration information. */@_config@
+
+/* Make sure macros are properly defined for module compilation */
+@_shared_def@ @_libname@_SHARED_LIBRARY
+#if defined(@_libname@_SHARED_LIBRARY)
+# if defined(@_libname@_EXPORTS)
+#  if defined(WIN32)
+#   define @_libname@_EXPORT __declspec(dllexport)
+#  elif defined(__GNUC__) || defined(__clang__)
+#   define @_libname@_EXPORT __attribute__ ((visibility("default")))
+#  endif
+# else
+#  if defined(WIN32)
+#   define @_libname@_EXPORT __declspec(dllimport)
+#  elif defined(__GNUC__) || defined(__clang__)
+#   define @_libname@_EXPORT __attribute__ ((visibility("default")))
+#  endif
+# endif
+#else
+# define @_libname@_EXPORT
+#endif
+
+#endif

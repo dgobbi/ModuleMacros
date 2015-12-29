@@ -1,0 +1,23 @@
+/*=========================================================================
+
+  Package: @_package@
+
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE.  See the copyright notice for more information.
+
+=========================================================================*/
+
+#ifndef __@_package@Config@_private@_h
+#define __@_package@Config@_private@_h
+
+/* Configuration information. */@_config@
+
+/* Version number. */
+#define @_prefix@_MAJOR_VERSION @PROJECT_MAJOR_VERSION@
+#define @_prefix@_MINOR_VERSION @PROJECT_MINOR_VERSION@
+#define @_prefix@_BUILD_VERSION @PROJECT_BUILD_VERSION@
+#define @_prefix@_SHORT_VERSION "@PROJECT_SHORT_VERSION@"
+#define @_prefix@_VERSION "@PROJECT_VERSION@"
+
+#endif

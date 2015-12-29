@@ -1,0 +1,24 @@
+# This is provided as @_prefix@_USE_FILE by @_package@Config.cmake.  It can
+# be INCLUDEd in a project to load the needed compiler and linker settings.
+
+if(NOT @_prefix@_USE_FILE_INCLUDED)
+  set(@_prefix@_USE_FILE_INCLUDED 1)
+
+  # Dependencies
+  find_package(VTK REQUIRED)
+  if(VTK_FOUND)
+    include(${VTK_USE_FILE})
+  endif()
+
+  # Add compiler flags needed to use @_package@.
+  if(NOT "${@_prefix@_REQUIRED_C_FLAGS}" STREQUAL "")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${@_prefix@_REQUIRED_C_FLAGS}")
+  endif()
+  if(NOT "${@_prefix@_REQUIRED_CXX_FLAGS}" STREQUAL "")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${@_prefix@_REQUIRED_CXX_FLAGS}")
+  endif()
+
+  # Add include directories needed to use @_package@.
+  include_directories(${@_prefix@_INCLUDE_DIRS})
+
+endif(NOT @_prefix@_USE_FILE_INCLUDED)
