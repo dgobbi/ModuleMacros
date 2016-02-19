@@ -84,10 +84,10 @@ macro(package)
   foreach(_arg ${ARGN})
     if(_arg MATCHES "^(VERSION)$")
       set(_part ${_arg})
-    elseif(_part STREQUAL "VERSION")
+    elseif("${_part}" STREQUAL "VERSION")
       set(_version ${_arg})
       unset(_part)
-    elseif(_part STREQUAL "_name")
+    elseif("${_part}" STREQUAL "_name")
       set(_name ${_arg})
       unset(_part)
     endif()
@@ -543,14 +543,16 @@ macro(package_find_package _name)
 
   # specifically for FindQt:
   set(QT_USE_IMPORTED_TARGETS 1)
-  if(_name STREQUAL "Qt5")
+  if("${_name}" STREQUAL "Qt5")
     # add core module if Qt5 requested
     set(_extra COMPONENTS Core)
   else()
     set(_extra)
   endif()
 
-  list(FIND ARGN "REQUIRED" _index)
+  # ARGN is a special entity, cannot be used as a list
+  set(_args ${ARGN})
+  list(FIND _args "REQUIRED" _index)
   if(NOT _index EQUAL -1)
     # REQUIRED
     if(DEFINED USE_${_pkg_prefix} AND NOT USE_${_pkg_prefix})
