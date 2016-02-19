@@ -491,6 +491,25 @@ macro(module_impl)
     link_directories(${_dep_LIBRARY_DIRS})
   endif()
 
+  # Set the AUTOINIT definitions
+  if(__dep_AUTOINIT)
+    list(REMOVE_DUPLICATES __dep_AUTOINIT)
+    set(_autoinit_defs)
+    foreach(_mod ${__dep_AUTOINIT})
+      list(LENGTH __dep_AUTOINIT_${_mod} _len)
+      set(_def "${_mod}_AUTOINIT=${_len}(")
+      set(_sep "")
+      foreach(_imp ${__dep_AUTOINIT_${_mod}})
+        set(_def "${_def}${_sep}${_imp}")
+        set(_sep ",")
+      endforeach()
+      set(_def "${_def})")
+      list(APPEND _autoinit_defs "${_def}")
+    endforeach()
+    set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS
+                 ${_autoinit_defs})
+  endif()
+
   list(APPEND ${MODULE_NAME}_LINK_LIBRARIES ${_dep_LIBRARIES})
 
   list(APPEND ${MODULE_NAME}_INCLUDE_DIRS
