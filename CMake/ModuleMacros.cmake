@@ -331,6 +331,8 @@ macro(module_load mod)
         if(${mod}_FOUND)
           set(${mod}_LOADED 1)
         endif()
+        # use CMAKE_AUTOMOC for Qt5
+        set(CMAKE_AUTOMOC ON)
       elseif(${mod} MATCHES "^Qt[^:]*$")
         # Qt4 has its own per-module variables
         string(TOUPPER ${mod} _umod)
