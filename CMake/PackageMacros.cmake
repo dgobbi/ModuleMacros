@@ -160,6 +160,55 @@ macro(package_depends)
       # find_package(${_arg} ${_version} REQUIRED ${_extra})
     endif()
   endwhile()
+
+  # Wrap Python option
+  if(VTK_WRAP_PYTHON)
+    option(BUILD_PYTHON_WRAPPERS "Build python wrappers" ON)
+    set(${_prefix}_WRAP_PYTHON ${BUILD_PYTHON_WRAPPERS})
+  else()
+    unset(BUILD_PYTHON_WRAPPERS CACHE)
+  endif()
+
+  # Wrap Tcl option
+  if(VTK_WRAP_TCL)
+    option(BUILD_TCL_WRAPPERS "Build tcl wrappers" ON)
+    set(${_prefix}_WRAP_TCL ${BUILD_TCL_WRAPPERS})
+  else()
+    unset(BUILD_TCL_WRAPPERS CACHE)
+  endif()
+
+  # Wrap Java option
+  if(VTK_WRAP_JAVA)
+    option(BUILD_JAVA_WRAPPERS "Build java wrappers" ON)
+    set(${_prefix}_WRAP_JAVA ${BUILD_JAVA_WRAPPERS})
+  else()
+    unset(BUILD_JAVA_WRAPPERS CACHE)
+  endif()
+
+  if(BUILD_TCL_WRAPPERS)
+    find_package(TCL REQUIRED)
+  endif()
+
+  if(BUILD_JAVA_WRAPPERS)
+    find_package(Java REQUIRED)
+    find_package(JNI REQUIRED)
+
+    set(VTK_JAVA_SOURCE_VERSION "1.5" CACHE STRING "javac source version")
+    set(VTK_JAVA_TARGET_VERSION "1.5" CACHE STRING "javac target version")
+
+    if(APPLE)
+      set(JAVAC_OPTIONS -J-Xmx512m)
+    endif()
+    if(NOT VTK_JAR_PATH)
+      set(VTK_JAR_PATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
+    endif()
+    find_file(VTK_JAVA_JAR NAMES vtk.jar vtk7.jar vtk6.jar vtk5.jar
+      PATHS ${vtkWrappingJava_RUNTIME_LIBRARY_DIRS})
+    if(NOT VTK_JAVA_JAR)
+      message(FATAL_ERROR "VTK_JAVA_JAR must be set to the location of vtk.jar")
+    endif()
+  endif()
+
 endmacro()
 
 #--------------------------------------------------------------------------

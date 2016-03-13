@@ -14,7 +14,7 @@
 # followed by the names of any modules that this library depends on.
 #
 # The following cmake variables are set by this macro:
-# MODULE_NAME          the name of the module
+# MODULE_NAME             the name of the module
 # <module>_DEPENDS        dependencies of the module
 # <module>_TEST_DEPENDS   extra dependencies for the tests
 
@@ -104,6 +104,12 @@ function(module_library _name)
 
   # add the library as a project target
   set_property(GLOBAL APPEND PROPERTY ${_prefix}_TARGETS ${_name})
+
+  if(${_prefix}_WRAP_PYTHON OR ${_prefix}_WRAP_TCL OR ${_prefix}_WRAP_JAVA)
+    set_target_properties(${_name} PROPERTIES POSITION_INDEPENDENT_CODE ON)
+    include("${PACKAGE_MACROS_CMAKE_DIR}/ModuleWrapping.cmake")
+    wrap_module(${_name} "${ARGN}")
+  endif()
 
   # install rule for the library
   install(TARGETS
