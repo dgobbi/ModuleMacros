@@ -13,10 +13,20 @@
 # the library that is created from the source files in the directory),
 # followed by the names of any modules that this library depends on.
 #
+# The following arguments can be used:
+#   DEPENDS <dependencies>
+#   TEST_DEPENDS <dependencies>
+#   EXCLUDE_FROM_WRAPPING
+#   EXCLUDE_FROM_PYTHON_WRAPPING
+#   EXCLUDE_FROM_TCL_WRAPPING
+#   EXCLUDE_FROM_JAVA_WRAPPING
+#   EXCLUDE_FROM_WRAP_HIERARCHY
+#
 # The following cmake variables are set by this macro:
-# MODULE_NAME             the name of the module
-# <module>_DEPENDS        dependencies of the module
-# <module>_TEST_DEPENDS   extra dependencies for the tests
+#   MODULE_NAME             the name of the module
+#   <module>_DEPENDS        dependencies of the module
+#   <module>_TEST_DEPENDS   extra dependencies for the tests
+#   <module>_EXCLUDE_FROM_* exclude variable for exclude property
 
 macro(module _name)
   # verify that the name is a valid library name
@@ -35,7 +45,10 @@ macro(module _name)
   set(${MODULE_NAME}_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
   set(${MODULE_NAME}_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
   foreach(_arg ${ARGN})
-    if(${_arg} MATCHES "^(|TEST_)DEPENDS$")
+    if(${_arg} MATCHES "^EXCLUDE_FROM_[_A-Z]+$")
+      set(${MODULE_NAME}_${_arg} 1)
+      set(_part)
+    elseif(${_arg} MATCHES "^(|TEST_)DEPENDS$")
       set(_part ${_arg})
     elseif(_part)
       list(APPEND ${MODULE_NAME}_${_part} "${_arg}")

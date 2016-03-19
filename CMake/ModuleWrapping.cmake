@@ -25,7 +25,8 @@ function(wrap_module _name _srcs)
   set(_prefix ${PACKAGE_PREFIX})
 
   # Create the hierarchy file
-  if("${VTK_MAJOR_VERSION}" GREATER 5)
+  if("${VTK_MAJOR_VERSION}" GREATER 5 AND
+     NOT ${_name}_EXCLUDE_FROM_WRAP_HIERARCHY)
     if(${_prefix}_WRAP_PYTHON OR ${_prefix}_WRAP_TCL OR ${_prefix}_WRAP_JAVA)
       set_source_files_properties(${LIB_SPECIAL} PROPERTIES WRAP_SPECIAL ON)
       set(_hname ${_name}Hierarchy)
@@ -40,7 +41,8 @@ function(wrap_module _name _srcs)
   endif()
 
   # Wrappers
-  if(${_prefix}_WRAP_PYTHON)
+  if(${_prefix}_WRAP_PYTHON AND NOT ${_name}_EXCLUDE_FROM_WRAPPING AND
+     NOT ${_name}_EXCLUDE_FROM_PYTHON_WRAPPING)
     set(XY) # Get python version, e.g. 27 for python 2.7
     if(vtkPython_LIBRARIES)
       list(GET vtkPython_LIBRARIES 0 _pylib_name)
@@ -105,7 +107,8 @@ function(wrap_module _name _srcs)
     target_link_libraries(${MODULE_PYTHON_NAME} ${LIB_PYTHON_NAME})
   endif()
 
-  if(${_prefix}_WRAP_TCL)
+  if(${_prefix}_WRAP_TCL AND NOT ${_name}_EXCLUDE_FROM_WRAPPING AND
+     NOT ${_name}_EXCLUDE_FROM_TCL_WRAPPING)
     set(LIB_TCL_NAME ${_name}TCL)
     string(TOLOWER ${_name} MODULE_TCL_NAME)
     set(LIB_TCL_OUTPUT_NAME ${LIB_TCL_NAME})
@@ -143,7 +146,8 @@ function(wrap_module _name _srcs)
       "${CMAKE_CURRENT_BINARY_DIR}/pkgIndex.tcl" @ONLY)
   endif()
 
-  if(${_prefix}_WRAP_JAVA)
+  if(${_prefix}_WRAP_JAVA AND NOT ${_name}_EXCLUDE_FROM_WRAPPING AND
+     NOT ${_name}_EXCLUDE_FROM_JAVA_WRAPPING)
     set(VTK_WRAP_JAVA3_INIT_DIR "${PACKAGE_MACROS_CMAKE_DIR}")
     set(VTK_JAVA_HOME ${CMAKE_CURRENT_BINARY_DIR}/java/vtk)
     set(VTK_JAVA_MANIFEST ${CMAKE_CURRENT_BINARY_DIR}/java/manifest.txt)
