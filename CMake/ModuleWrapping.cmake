@@ -16,6 +16,7 @@
 #
 # The following variable is optional:
 #   <module>_LIB_SUFFIX
+#   <module>_WRAP_HINTS
 #
 # The following variable is set for use by the VTK wrapping macros:
 #   KIT_HIERARCHY_FILE
@@ -23,6 +24,17 @@
 function(wrap_module _name _srcs)
 
   set(_prefix ${PACKAGE_PREFIX})
+
+  # Set VTK_WRAP_HINTS for vtkWrapPython.cmake et al.
+  if(${_name}_WRAP_HINTS AND EXISTS "${${_name}_WRAP_HINTS}")
+    set(VTK_WRAP_HINTS "${${_name}_WRAP_HINTS}")
+  elseif(EXISTS "${CMAKE_CURRENT_LIST_DIR}/${_name}_hints")
+    set(VTK_WRAP_HINTS "${CMAKE_CURRENT_LIST_DIR}/${_name}_hints")
+  elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/hints")
+    set(VTK_WRAP_HINTS "${CMAKE_CURRENT_SOURCE_DIR}/hints")
+  elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/hints.txt")
+    set(VTK_WRAP_HINTS "${CMAKE_CURRENT_SOURCE_DIR}/hints.txt")
+  endif()
 
   # Create the hierarchy file
   if("${VTK_MAJOR_VERSION}" GREATER 5 AND
